@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام مناسك الحج</title>
+    <script>
+        // Redirect to pilgrim.html with the ID parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const pilgrimId = urlParams.get('id');
+        
+        if (pilgrimId) {
+            window.location.href = `pilgrim.html?id=${pilgrimId}`;
+        } else {
+            // If no ID, show a simple message
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.innerHTML = `
+                    <div style="font-family: 'Cairo', sans-serif; text-align: center; padding: 50px; background: linear-gradient(135deg, #FDFBF7 0%, #F5EBD9 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center;">
+                        <div style="background: white; padding: 40px; border-radius: 24px; box-shadow: 0 10px 40px rgba(203, 107, 4, 0.15);">
+                            <div style="font-size: 64px; margin-bottom: 20px;">🕋</div>
+                            <h1 style="color: #64462E; font-size: 28px; margin-bottom: 10px;">نظام مناسك الحج</h1>
+                            <p style="color: #B88B4D;">يرجى مسح رمز QR للحاج لعرض المعلومات</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</head>
+<body>
+    <div style="font-family: 'Cairo', sans-serif; text-align: center; padding: 50px;">
+        <p>جاري التحويل...</p>
+    </div>
+</body>
+</html>
