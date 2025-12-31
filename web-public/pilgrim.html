@@ -437,22 +437,25 @@
                 const SUPABASE_URL = 'https://cyyanlvreiwmebluguhh.supabase.co';
                 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5eWFubHZyZWl3bWVibHVndWhoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcwNjcxMDksImV4cCI6MjA4MjY0MzEwOX0.7IMEUXu4jIC7DJUAIEWPHYakR6Djmpu5TD8pFA3j0vk';
                 
-                const response = await fetch(`${SUPABASE_URL}/rest/v1/pilgrims?id=eq.${id}&select=id,full_name_arabic,full_name_english,national_id,phone,emergency_contact_name,emergency_contact_phone,group_number,bus_number,health_status,blood_type,camps:camp_id(name,location)`, {
+                const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_pilgrim_with_camp_info`, {
+                    method: 'POST',
                     headers: {
                         'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`
-                    }
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ pilgrim_id: id })
                 });
                 
                 if (!response.ok) throw new Error('فشل في تحميل البيانات');
 
                 const data = await response.json();
                 
-                if (!data || data.length === 0) {
+                if (!data) {
                     throw new Error('لم يتم العثور على بيانات الحاج');
                 }
 
-                displayPilgrimData(data[0]);
+                displayPilgrimData(data);
             } catch (error) {
                 showError(error.message || 'حدث خطأ في تحميل البيانات');
             }
@@ -526,16 +529,24 @@
                             <span class="info-value">${data.bus_number}</span>
                         </div>
                         ` : ''}
-                        ${data.camps?.name ? `
+                        ${data.camp_name ? `
                         <div class="info-row">
                             <span class="info-label">المخيم</span>
-                            <span class="info-value">${data.camps.name}</span>
+                            <span class="info-value">${data.camp_name}</span>
                         </div>
                         ` : ''}
-                        ${data.camps?.location ? `
+                        ${data.camp_location_name ? `
                         <div class="info-row">
                             <span class="info-label">موقع المخيم</span>
-                            <span class="info-value">${data.camps.location}</span>
+                            <span class="info-value">
+                                ${data.camp_lat && data.camp_lng ? `
+                                    <a href="https://www.google.com/maps?q=${data.camp_lat},${data.camp_lng}" 
+                                       target="_blank" 
+                                       style="color: #CB6B04; text-decoration: underline; font-weight: 600;">
+                                        📍 ${data.camp_location_name}
+                                    </a>
+                                ` : data.camp_location_name}
+                            </span>
                         </div>
                         ` : ''}
                     </div>
